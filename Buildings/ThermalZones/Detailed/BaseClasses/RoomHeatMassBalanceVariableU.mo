@@ -366,9 +366,8 @@ protected
     annotation (Placement(transformation(extent={{-20,-78},{-40,-58}})));
 public
   Modelica.Blocks.Interfaces.RealVectorInput uFactors[2] annotation (Placement(
-        transformation(extent={{-230,-260},{-190,-220}}),
-                                                      iconTransformation(extent={{-230,
-            -260},{-190,-220}})));
+        transformation(extent={{-238,-6},{-198,34}}), iconTransformation(extent={{-238,-6},
+            {-198,34}})));
 equation
   connect(conBou.opa_a, surf_conBou) annotation (Line(
       points={{282,-122.667},{282,-122},{288,-122},{288,-216},{-240,-216},{-240,
@@ -841,7 +840,11 @@ equation
           extent={{-198,144},{-122,112}},
           lineColor={0,0,127},
           visible=haveControllableWindow,
-          textString="uWin")}),
+          textString="uWin"),
+        Text(
+          extent={{-190,30},{-114,-2}},
+          lineColor={0,0,127},
+          textString="uFactor")}),
     preferredView="info",
     defaultComponentName="roo",
     Documentation(info="<html>

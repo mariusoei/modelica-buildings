@@ -39,7 +39,7 @@ equation
   // This section assigns the temperatures and heat flow rates of the layer models to
   // an array that makes plotting the results easier.
   for i in 1:nLay loop
-    connect(lay.uFactor[i],uFactors[i]);
+    connect(lay[i].uFactor,uFactors[i]);
     for j in 1:layers.nSta[i] loop
       T[sum(layers.nSta[k] for k in 1:(i-1)) +j] = lay[i].T[j];
     end for;
