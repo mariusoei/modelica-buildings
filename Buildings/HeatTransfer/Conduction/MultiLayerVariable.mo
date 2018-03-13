@@ -17,8 +17,9 @@ model MultiLayerVariable
     "=true, a state will be at the surface b"
     annotation (Dialog(tab="Dynamics"),
                 Evaluate=true);
-  input Real uFactors[nLay]
-    "Dynamic heat transfer coefficient factors for layers";
+
+  Modelica.Blocks.Interfaces.RealInput uFactors[nLay]
+    annotation (Placement(transformation(extent={{-110,26},{-70,66}})));
 
 protected
   Buildings.HeatTransfer.Conduction.SingleLayerVariable[nLay] lay(
@@ -38,7 +39,7 @@ equation
   // This section assigns the temperatures and heat flow rates of the layer models to
   // an array that makes plotting the results easier.
   for i in 1:nLay loop
-    layers.uFactor[i] = uFactors[i];
+    connect(lay.uFactor[i],uFactors[i]);
     for j in 1:layers.nSta[i] loop
       T[sum(layers.nSta[k] for k in 1:(i-1)) +j] = lay[i].T[j];
     end for;

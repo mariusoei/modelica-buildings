@@ -365,7 +365,7 @@ protected
        haveShade "Temperature of shading device"
     annotation (Placement(transformation(extent={{-20,-78},{-40,-58}})));
 public
-  Modelica.Blocks.Interfaces.RealVectorInput uFactors[nConExt] annotation (Placement(
+  Modelica.Blocks.Interfaces.RealVectorInput uFactors[2] annotation (Placement(
         transformation(extent={{-230,-260},{-190,-220}}),
                                                       iconTransformation(extent={{-230,
             -260},{-190,-220}})));
@@ -702,7 +702,7 @@ equation
       points={{64,-119},{160,-119},{160,138.333},{241.847,138.333}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(uFactors, conExt.uFactors);
+  connect(uFactors, conExt[1].uFactors);
   connect(air.conExtWin, conExtWin.opa_b) annotation (Line(
       points={{64,-121},{160,-121},{160,69},{249.9,69}},
       color={191,0,0},
