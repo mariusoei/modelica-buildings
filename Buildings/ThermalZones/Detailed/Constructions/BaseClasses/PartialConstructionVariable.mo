@@ -51,6 +51,11 @@ partial model PartialConstructionVariable
     annotation (Dialog(tab="Dynamics"),
                 Evaluate=true);
 
+  parameter Integer varLayerNum=1
+    "number of the variable heat conduction layer"
+    annotation (Dialog(tab="Dynamics"),
+                Evaluate=true);
+
 
   HeatTransfer.Conduction.MultiLayerVariable opa(
     final A=AOpa,
@@ -59,15 +64,16 @@ partial model PartialConstructionVariable
     final stateAtSurface_a = stateAtSurface_a,
     final stateAtSurface_b = stateAtSurface_b,
     final T_a_start=T_a_start,
-    final T_b_start=T_b_start)
+    final T_b_start=T_b_start,
+    final varLayerNum=varLayerNum)
     "Model for heat transfer through opaque construction"
     annotation (Placement(transformation(extent={{-52,148},{52,252}})));
 
-  Modelica.Blocks.Interfaces.RealVectorInput uFactors[nLay] annotation (Placement(
+  Modelica.Blocks.Interfaces.RealVectorInput uFactor annotation (Placement(
         transformation(extent={{-314,12},{-274,52}}), iconTransformation(extent=
            {{-314,12},{-274,52}})));
 equation
-  connect(opa.uFactors,uFactors);
+  connect(opa.uFactor,uFactor);
   connect(opa.port_a, opa_a) annotation (Line(
       points={{-52,200},{-300,200}},
       color={191,0,0},

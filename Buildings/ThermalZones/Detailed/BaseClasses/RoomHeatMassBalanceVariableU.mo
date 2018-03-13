@@ -42,7 +42,8 @@ partial model RoomHeatMassBalanceVariableU "Base model for a room"
     final T_a_start=datConExt.T_a_start,
     final T_b_start=datConExt.T_b_start,
     final stateAtSurface_a = datConExt.stateAtSurface_a,
-    final stateAtSurface_b = datConExt.stateAtSurface_b) if haveConExt
+    final stateAtSurface_b = datConExt.stateAtSurface_b,
+    final varLayerNum = datConExt.varLayerNum) if haveConExt
     "Heat conduction through exterior construction that have no window"
     annotation (Placement(transformation(extent={{288,100},{242,146}})));
   Constructions.ConstructionWithWindow conExtWin[NConExtWin](
@@ -365,9 +366,11 @@ protected
        haveShade "Temperature of shading device"
     annotation (Placement(transformation(extent={{-20,-78},{-40,-58}})));
 public
-  Modelica.Blocks.Interfaces.RealVectorInput uFactors[2] annotation (Placement(
-        transformation(extent={{-238,-6},{-198,34}}), iconTransformation(extent={{-238,-6},
-            {-198,34}})));
+  Modelica.Blocks.Interfaces.RealVectorInput uFactors[NConExt]
+    "Wall construction conduction factor input"
+    annotation (Placement(
+        transformation(extent={{306,82},{346,122}}),  iconTransformation(extent={{306,82},
+            {346,122}})));
 equation
   connect(conBou.opa_a, surf_conBou) annotation (Line(
       points={{282,-122.667},{282,-122},{288,-122},{288,-216},{-240,-216},{-240,
@@ -690,18 +693,18 @@ equation
       smooth=Smooth.None));
 
   for i in 1:nPorts loop
-    connect(ports[i],air. ports[i])
+    connect(ports[i],air.ports[i])
                                   annotation (Line(
       points={{-260,-60},{-218,-60},{-218,-206},{52,-206},{52,-141.9}},
       color={0,127,255},
       smooth=Smooth.None));
   end for;
 
+
   connect(air.conExt, conExt.opa_b) annotation (Line(
       points={{64,-119},{160,-119},{160,138.333},{241.847,138.333}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(uFactors, conExt[1].uFactors);
   connect(air.conExtWin, conExtWin.opa_b) annotation (Line(
       points={{64,-121},{160,-121},{160,69},{249.9,69}},
       color={191,0,0},
@@ -776,6 +779,12 @@ equation
   connect(conExtWinRad.QTraDir_flow, solRadExc.JInDirConExtWin) annotation (
       Line(points={{299,-23},{18,-23},{18,51.6667},{-79.5833,51.6667}}, color={
           0,0,127}));
+
+  for i in 1:nConExt loop
+    connect(conExt[i].uFactor, uFactors[i]) annotation (Line(points={{287.54,
+            125.453},{306.77,125.453},{306.77,102},{326,102}},
+                                                   color={0,0,127}));
+  end for;
   annotation (
     Diagram(coordinateSystem(preserveAspectRatio=false,extent={{-260,-220},{460,
             200}})),

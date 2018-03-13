@@ -18,7 +18,12 @@ model MultiLayerVariable
     annotation (Dialog(tab="Dynamics"),
                 Evaluate=true);
 
-  Modelica.Blocks.Interfaces.RealInput uFactors[nLay]
+  parameter Integer varLayerNum=1
+    "number of the variable heat conduction layer"
+    annotation (Dialog(tab="Dynamics"),
+                Evaluate=true);
+
+  Modelica.Blocks.Interfaces.RealInput uFactor
     annotation (Placement(transformation(extent={{-110,26},{-70,66}})));
 
 protected
@@ -39,14 +44,19 @@ equation
   // This section assigns the temperatures and heat flow rates of the layer models to
   // an array that makes plotting the results easier.
   for i in 1:nLay loop
-    connect(lay[i].uFactor,uFactors[i]);
     for j in 1:layers.nSta[i] loop
       T[sum(layers.nSta[k] for k in 1:(i-1)) +j] = lay[i].T[j];
     end for;
     for j in 1:layers.nSta[i]+1 loop
       Q_flow[sum(layers.nSta[k] for k in 1:i-1)+(i-1)+j] = lay[i].Q_flow[j];
     end for;
+    if i<>varLayerNum then
+      lay[i].uFactor = 1;
+    end if;
   end for;
+
+  connect(lay[varLayerNum].uFactor,uFactor);
+
   connect(port_a, lay[1].port_a) annotation (Line(
       points={{-100,5.55112e-16},{-60,5.55112e-16},{-60,6.10623e-16},{-20,
           6.10623e-16}},

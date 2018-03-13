@@ -3,6 +3,7 @@ record ParameterConstruction
   "Record for exterior constructions that have no window"
   extends Buildings.ThermalZones.Detailed.BaseClasses.PartialParameterConstruction;
   parameter Modelica.SIunits.Area A "Heat transfer area";
+  parameter Integer varLayerNum=1 "Index of variable heat conduction layer";
 
   annotation (
 Documentation(info="<html>
