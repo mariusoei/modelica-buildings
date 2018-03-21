@@ -369,8 +369,9 @@ public
   Modelica.Blocks.Interfaces.RealVectorInput uFactors[NConExt]
     "Wall construction conduction factor input"
     annotation (Placement(
-        transformation(extent={{306,82},{346,122}}),  iconTransformation(extent={{306,82},
-            {346,122}})));
+        transformation(extent={{-240,-52},{-200,-12}}),
+                                                      iconTransformation(extent={{-240,
+            -52},{-200,-12}})));
 equation
   connect(conBou.opa_a, surf_conBou) annotation (Line(
       points={{282,-122.667},{282,-122},{288,-122},{288,-216},{-240,-216},{-240,
@@ -782,7 +783,7 @@ equation
 
   for i in 1:nConExt loop
     connect(conExt[i].uFactor, uFactors[i]) annotation (Line(points={{287.54,
-            125.453},{306.77,125.453},{306.77,102},{326,102}},
+            125.453},{306.77,125.453},{306.77,-32},{-220,-32}},
                                                    color={0,0,127}));
   end for;
   annotation (
@@ -851,7 +852,7 @@ equation
           visible=haveControllableWindow,
           textString="uWin"),
         Text(
-          extent={{-190,30},{-114,-2}},
+          extent={{-190,-16},{-114,-48}},
           lineColor={0,0,127},
           textString="uFactor")}),
     preferredView="info",
