@@ -137,6 +137,15 @@ First implementation.
       defaultComponentPrefixes="parameter",
       defaultComponentName="datOpaCon");
 
+  record Insulation100Lightweight200 =
+      Buildings.HeatTransfer.Data.OpaqueConstructions.Generic (
+        material={Solids.InsulationBoard(x=0.1),
+                  Solids.Concrete(x=0.2,d=100)},
+                  final nLay=2)
+    "Construction with 100 mm insulation and 200 mm lightweight concrete"
+    annotation (
+      defaultComponentPrefixes="parameter",
+      defaultComponentName="datOpaCon");
   annotation (preferredView="info",
 Documentation(info="<html>
 <p>
