@@ -1,7 +1,7 @@
 within Buildings.ThermalZones.Detailed;
-model MixedAirVariableU
-  "Model of a room in which the air is completely mixed"
-  extends Buildings.ThermalZones.Detailed.BaseClasses.RoomHeatMassBalanceVariableU(
+model MixedAirVariable "Model of a room in which the air is completely mixed"
+  extends
+    Buildings.ThermalZones.Detailed.BaseClasses.RoomHeatMassBalanceVariable(
   redeclare Buildings.ThermalZones.Detailed.BaseClasses.MixedAirHeatMassBalance air(
     final energyDynamics=energyDynamics,
     final massDynamics = massDynamics,
@@ -244,4 +244,4 @@ First implementation.
           lineColor={0,0,127},
           textString="C_flow",
           visible=use_C_flow)}));
-end MixedAirVariableU;
+end MixedAirVariable;

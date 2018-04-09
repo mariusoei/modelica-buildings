@@ -1,5 +1,5 @@
 within Buildings.ThermalZones.Detailed.BaseClasses;
-partial model RoomHeatMassBalanceVariableU "Base model for a room"
+partial model RoomHeatMassBalanceVariable "Base model for a room"
   extends Buildings.ThermalZones.Detailed.BaseClasses.ConstructionRecords;
 
   replaceable package Medium =
@@ -701,7 +701,6 @@ equation
       smooth=Smooth.None));
   end for;
 
-
   connect(air.conExt, conExt.opa_b) annotation (Line(
       points={{64,-119},{160,-119},{160,138.333},{241.847,138.333}},
       color={191,0,0},
@@ -985,4 +984,4 @@ First implementation.
 </li>
 </ul>
 </html>"));
-end RoomHeatMassBalanceVariableU;
+end RoomHeatMassBalanceVariable;
