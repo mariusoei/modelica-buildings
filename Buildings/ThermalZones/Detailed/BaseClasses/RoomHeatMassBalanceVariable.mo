@@ -43,7 +43,7 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
     final T_b_start=datConExt.T_b_start,
     final stateAtSurface_a = datConExt.stateAtSurface_a,
     final stateAtSurface_b = datConExt.stateAtSurface_b,
-    final varLayerNum = datConExt.varLayerNum) if haveConExt
+    final varConductionLayerNum = datConExt.varConductionLayerNum) if haveConExt
     "Heat conduction through exterior construction that have no window"
     annotation (Placement(transformation(extent={{288,100},{242,146}})));
   Constructions.ConstructionWithWindow conExtWin[NConExtWin](

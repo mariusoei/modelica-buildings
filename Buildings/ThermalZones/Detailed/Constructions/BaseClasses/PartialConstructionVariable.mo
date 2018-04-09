@@ -51,7 +51,7 @@ partial model PartialConstructionVariable
     annotation (Dialog(tab="Dynamics"),
                 Evaluate=true);
 
-  parameter Integer varLayerNum=1
+  parameter Integer varConductionLayerNum=1
     "number of the variable heat conduction layer"
     annotation (Dialog(tab="Dynamics"),
                 Evaluate=true);
@@ -65,7 +65,7 @@ partial model PartialConstructionVariable
     final stateAtSurface_b = stateAtSurface_b,
     final T_a_start=T_a_start,
     final T_b_start=T_b_start,
-    final varLayerNum=varLayerNum)
+    final varConductionLayerNum=varConductionLayerNum)
     "Model for heat transfer through opaque construction"
     annotation (Placement(transformation(extent={{-52,148},{52,252}})));
 

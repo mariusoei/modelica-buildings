@@ -18,7 +18,7 @@ model MultiLayerVariable
     annotation (Dialog(tab="Dynamics"),
                 Evaluate=true);
 
-  parameter Integer varLayerNum=1
+  parameter Integer varConductionLayerNum=1
     "number of the variable heat conduction layer"
     annotation (Dialog(tab="Dynamics"),
                 Evaluate=true);
@@ -50,12 +50,14 @@ equation
     for j in 1:layers.nSta[i]+1 loop
       Q_flow[sum(layers.nSta[k] for k in 1:i-1)+(i-1)+j] = lay[i].Q_flow[j];
     end for;
-    if i<>varLayerNum then
+    if i<>varConductionLayerNum then
       lay[i].uFactor = 1;
     end if;
   end for;
 
-  connect(lay[varLayerNum].uFactor,uFactor);
+  if varConductionLayerNum<>0 then
+    connect(lay[varConductionLayerNum].uFactor,uFactor);
+  end if;
 
   connect(port_a, lay[1].port_a) annotation (Line(
       points={{-100,5.55112e-16},{-60,5.55112e-16},{-60,6.10623e-16},{-20,

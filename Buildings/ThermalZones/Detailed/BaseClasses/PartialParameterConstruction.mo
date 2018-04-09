@@ -11,7 +11,7 @@ record PartialParameterConstruction "Partial record for constructions"
                choicesAllMatching=true, Placement(transformation(extent={{146,258},
             {166,278}})));
 
-  parameter Integer varLayerNum=1 "Index of variable heat conduction layer";
+  parameter Integer varConductionLayerNum=0 "Index of variable heat conduction layer";
   parameter Modelica.SIunits.Angle til "Surface tilt";
   parameter Modelica.SIunits.Angle azi "Surface azimuth";
   final parameter Boolean isFloor=til > 2.74889125 and til < 3.53428875
