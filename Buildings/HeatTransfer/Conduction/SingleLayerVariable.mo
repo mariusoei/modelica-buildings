@@ -50,7 +50,8 @@ model SingleLayerVariable "Model for single layer heat conductance"
   "Number of states in a material (do not overwrite, used to work around Dymola 2017 bug)"
      annotation (Evaluate=true, HideResult=true, Dialog(enable=false, tab="Advanced"));
   Modelica.Blocks.Interfaces.RealInput uFactor
-  "Dynamic factor to multiply heat transfer coefficient with.";
+  "Dynamic factor to multiply heat transfer coefficient with."
+    annotation (Placement(transformation(extent={{-126,32},{-86,72}})));
 
 protected
   final parameter Integer nSta=

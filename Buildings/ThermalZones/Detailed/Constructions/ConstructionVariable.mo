@@ -3,13 +3,14 @@ model ConstructionVariable
   "Model for an opaque construction that has no window"
   extends
     Buildings.ThermalZones.Detailed.Constructions.BaseClasses.PartialConstructionVariable(
-    final AOpa=A);
+      final AOpa=A);
 
   annotation (
-defaultComponentName="conOpa",
-Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},
-            {300,300}})), Icon(coordinateSystem(preserveAspectRatio=true,
-          extent={{-300,-300},{300,300}}), graphics={
+    defaultComponentName="conOpa",
+    Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},{300,
+            300}})),
+    Icon(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},{300,
+            300}}), graphics={
         Rectangle(
           extent={{-290,202},{298,198}},
           lineColor={0,0,0},
@@ -54,8 +55,7 @@ Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},
           smooth=Smooth.None,
           fillColor={95,95,95},
           fillPattern=FillPattern.Solid)}),
-    Documentation(
-    info="<html>
+    Documentation(info="<html>
 This model is used to compute heat transfer through opaque constructions inside the
 room model.
 The model uses the record <code>layers</code> to access the material properties
@@ -63,8 +63,7 @@ of the opaque construction. The heat transfer is computed in the instance
 <code>opa</code>, which uses the model
 <a href=\"modelica://Buildings.HeatTransfer.Conduction.MultiLayer\">
 Buildings.HeatTransfer.Conduction.MultiLayer</a>.
-</html>",
-revisions="<html>
+</html>", revisions="<html>
 <ul>
 <li>
 December 6 2010, by Michael Wetter:<br/>

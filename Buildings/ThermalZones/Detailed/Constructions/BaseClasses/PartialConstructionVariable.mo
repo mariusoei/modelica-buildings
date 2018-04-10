@@ -69,11 +69,11 @@ partial model PartialConstructionVariable
     "Model for heat transfer through opaque construction"
     annotation (Placement(transformation(extent={{-52,148},{52,252}})));
 
-  Modelica.Blocks.Interfaces.RealVectorInput uFactor annotation (Placement(
-        transformation(extent={{-314,12},{-274,52}}), iconTransformation(extent=
-           {{-314,12},{-274,52}})));
+  Modelica.Blocks.Interfaces.RealInput uFactor annotation (Placement(
+        transformation(extent={{-328,234},{-288,274}}),
+                                                      iconTransformation(extent={{-328,
+            234},{-288,274}})));
 equation
-  connect(opa.uFactor,uFactor);
   connect(opa.port_a, opa_a) annotation (Line(
       points={{-52,200},{-300,200}},
       color={191,0,0},
@@ -82,6 +82,8 @@ equation
       points={{52,200},{302,200}},
       color={191,0,0},
       smooth=Smooth.None));
+  connect(uFactor, opa.uFactor) annotation (Line(points={{-308,254},{-182,254},
+          {-182,227.04},{-55.12,227.04}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},
             {300,300}})), Icon(coordinateSystem(preserveAspectRatio=true,
           extent={{-300,-300},{300,300}}), graphics={
