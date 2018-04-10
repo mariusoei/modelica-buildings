@@ -17,24 +17,35 @@ model MultiLayerVariable
     annotation (Dialog(tab="Dynamics"), Evaluate=true);
 
   parameter Integer varConductionLayerNum=1
-    "number of the variable heat conduction layer"
-    annotation (Dialog(tab="Dynamics"), Evaluate=true);
+    "Index of the variable heat conduction layer"
+    annotation (Dialog(tab="Variability"), Evaluate=true);
+
+  parameter Boolean showHeatPort=false
+    "Open heat port to an outside heat source/sink"
+    annotation (Dialog(tab="Variability"), Evaluate=true);
+
+  parameter Integer heatPortAfterLayerNum=1
+    "Index of the layer after which to expose the heat port"
+    annotation (Dialog(tab="Variability"), Evaluate=true);
 
   Modelica.Blocks.Interfaces.RealInput uFactor
     annotation (Placement(transformation(extent={{-126,32},{-86,72}})));
+
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a port_inside if showHeatPort
+    "Additional inside heat port" annotation (Placement(transformation(extent={{-110,
+            -64},{-90,-44}})));
 
 protected
   Buildings.HeatTransfer.Conduction.SingleLayerVariable[nLay] lay(
     final nSta2={layers.nSta[i] for i in 1:nLay},
     each final A=A,
-    final stateAtSurface_a={if i == 1 then stateAtSurface_a else false for i
-         in 1:nLay},
-    final stateAtSurface_b={if i == nLay then stateAtSurface_b else false for i
-         in 1:nLay},
+    final stateAtSurface_a={if i == 1 then stateAtSurface_a else false for i in
+            1:nLay},
+    final stateAtSurface_b={if i == nLay then stateAtSurface_b else false for i in
+            1:nLay},
     material={layers.material[i] for i in 1:size(layers.material, 1)},
     T_a_start={T_b_start + (T_a_start - T_b_start)*1/R*sum(layers.material[k].R
         for k in i:size(layers.material, 1)) for i in 1:size(layers.material, 1)},
-
     T_b_start={T_a_start + (T_b_start - T_a_start)*1/R*sum(layers.material[k].R
         for k in 1:i) for i in 1:size(layers.material, 1)},
     each steadyStateInitial=steadyStateInitial) "Material layer"
@@ -80,6 +91,11 @@ equation
       color={191,0,0},
       smooth=Smooth.None));
 
+
+  if showHeatPort then
+    connect(port_inside, lay[heatPortAfterLayerNum].port_b)
+      annotation (Line(points={{-100,-54},{0,-54},{0,0}},     color={191,0,0}));
+  end if;
   annotation (
     Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100},{100,
             100}}), graphics={
