@@ -52,26 +52,6 @@ model SingleLayerVariable "Model for single layer heat conductance"
     "Dynamic factor to multiply heat transfer coefficient with."
     annotation (Placement(transformation(extent={{-126,32},{-86,72}})));
 
-  parameter Boolean hasFluidContainer=false
-    "=true if this construction contains a fluid container"
-    annotation (evaluate=true);
-
-  parameter Modelica.SIunits.Length x_FluidContainer=0
-    "Thickness of the fluid container in this construction";
-
-  parameter Modelica.SIunits.Area A_FluidContainer=A
-    "Area of the fluid container in this construction";
-
-  Modelica.Fluid.Vessels.OpenTank tank(
-    nPorts=1,
-    height=x_FluidContainer,
-    crossArea=A_FluidContainer,
-    level_start=0,
-    use_HeatTransfer=true) if hasFluidContainer "Fluid container"
-    annotation (Placement(transformation(extent={{-32,-44},{8,-4}})));
-  Modelica.Fluid.Interfaces.FluidPort_a port_a if hasFluidContainer
-    "Fluid port for the container"
-    annotation (Placement(transformation(extent={{-110,-74},{-90,-54}})));
 
 protected
   final parameter Integer nSta=max(nSta2, if stateAtSurface_a or
@@ -219,11 +199,6 @@ equation
     end if;
   end if;
 
-
-  if hasFluidContainer then
-    connect(port_a, tank.ports[1]) annotation (Line(points={{-100,-64},{-12,-64},
-            {-12,-44}}, color={0,127,255}));
-  end if
   annotation (
     Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
         graphics={
@@ -521,5 +496,4 @@ First implementation.
 </li>
 </ul>
 </html>"));
-
 end SingleLayerVariable;

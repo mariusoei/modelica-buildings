@@ -13,6 +13,18 @@ partial model PartialConstructionVariable
                choicesAllMatching=true, Placement(transformation(extent={{146,258},
             {166,278}})));
 
+
+  parameter Boolean hasFluidContainer=false
+    "=true if this construction contains a fluid container"
+    annotation (evaluate=true);
+
+  parameter Modelica.SIunits.Length x_FluidContainer=0
+    "Thickness of the fluid container in this construction";
+
+  parameter Modelica.SIunits.Area A_FluidContainer=AOpa
+    "Area of the fluid container in this construction";
+
+
   parameter Modelica.SIunits.Angle til "Surface tilt";
 
   final parameter Boolean isFloor=til > 2.74889125 and til < 3.53428875
@@ -65,7 +77,8 @@ partial model PartialConstructionVariable
     final stateAtSurface_b = stateAtSurface_b,
     final T_a_start=T_a_start,
     final T_b_start=T_b_start,
-    final varConductionLayerNum=varConductionLayerNum)
+    final varConductionLayerNum=varConductionLayerNum,
+    final showHeatPort=hasFluidContainer)
     "Model for heat transfer through opaque construction"
     annotation (Placement(transformation(extent={{-52,148},{52,252}})));
 
@@ -73,6 +86,17 @@ partial model PartialConstructionVariable
         transformation(extent={{-328,234},{-288,274}}),
                                                       iconTransformation(extent={{-328,
             234},{-288,274}})));
+
+  Modelica.Fluid.Vessels.OpenTank tank(
+    nPorts=1,
+    height=x_FluidContainer,
+    crossArea=A_FluidContainer,
+    level_start=0,
+    use_HeatTransfer=true) if hasFluidContainer "Fluid container"
+    annotation (Placement(transformation(extent={{26,72},{66,112}})));
+  Modelica.Fluid.Interfaces.FluidPort_a port_a if hasFluidContainer
+    "Fluid port for the container"
+    annotation (Placement(transformation(extent={{-312,0},{-292,20}})));
 equation
   connect(opa.port_a, opa_a) annotation (Line(
       points={{-52,200},{-300,200}},
@@ -84,6 +108,14 @@ equation
       smooth=Smooth.None));
   connect(uFactor, opa.uFactor) annotation (Line(points={{-308,254},{-182,254},
           {-182,227.04},{-55.12,227.04}}, color={0,0,127}));
+
+
+  if hasFluidContainer then
+    connect(port_a,tank. ports[1]) annotation (Line(points={{-302,10},{46,10},{46,
+          72}},         color={0,127,255}));
+    connect(tank.heatPort, opa.port_inside) annotation (Line(points={{26,92},{-86,92},
+          {-86,171.92},{-52,171.92}}, color={191,0,0}));
+  end if;
   annotation (Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},
             {300,300}})), Icon(coordinateSystem(preserveAspectRatio=true,
           extent={{-300,-300},{300,300}}), graphics={
