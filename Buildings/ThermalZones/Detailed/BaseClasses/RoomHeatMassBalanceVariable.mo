@@ -43,7 +43,10 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
     final T_b_start=datConExt.T_b_start,
     final stateAtSurface_a = datConExt.stateAtSurface_a,
     final stateAtSurface_b = datConExt.stateAtSurface_b,
-    final varConductionLayerNum = datConExt.varConductionLayerNum) if haveConExt
+    final varConductionLayerNum = datConExt.varConductionLayerNum,
+    final hasFluidContainer = datConExt.hasFluidContainer,
+    final A_FluidContainer = datConExt.A_FluidContainer,
+    final x_FluidContainer = datConExt.x_FluidContainer) if haveConExt
     "Heat conduction through exterior construction that have no window"
     annotation (Placement(transformation(extent={{288,100},{242,146}})));
   Constructions.ConstructionWithWindow conExtWin[NConExtWin](
@@ -372,6 +375,14 @@ public
         transformation(extent={{-240,-52},{-200,-12}}),
                                                       iconTransformation(extent={{-240,
             -52},{-200,-12}})));
+  Modelica.Fluid.Vessels.BaseClasses.VesselFluidPorts_b fluidPorts[NConExt] "Fluid inlets and outlets"
+    annotation (Placement(transformation(
+        extent={{-40,-10},{40,10}},
+        origin={114,144},
+        rotation=90), iconTransformation(
+        extent={{-40,-10},{40,10}},
+        rotation=90,
+        origin={-150,-202})));
 equation
   connect(conBou.opa_a, surf_conBou) annotation (Line(
       points={{282,-122.667},{282,-122},{288,-122},{288,-216},{-240,-216},{-240,
@@ -781,8 +792,8 @@ equation
           0,0,127}));
 
   for i in 1:nConExt loop
-    connect(conExt[i].uFactor, uFactors[i]) annotation (Line(points={{287.54,
-            125.453},{306.77,125.453},{306.77,-32},{-220,-32}},
+    connect(conExt[i].uFactor, uFactors[i]) annotation (Line(points={{288.613,
+            142.473},{306.77,142.473},{306.77,-32},{-220,-32}},
                                                    color={0,0,127}));
   end for;
   annotation (
