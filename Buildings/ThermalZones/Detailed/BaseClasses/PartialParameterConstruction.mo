@@ -14,6 +14,8 @@ record PartialParameterConstruction "Partial record for constructions"
   parameter Boolean hasFluidContainer=false "=true if this construction contains a fluid container";
   parameter Modelica.SIunits.Length x_FluidContainer = 0 "Thickness of the fluid container";
   parameter Modelica.SIunits.Area A_FluidContainer = 0 "Area of the fluid container";
+  replaceable package Medium_FluidContainer =
+      Modelica.Media.Interfaces.PartialMedium                                          "Medium in the fluid container";
   parameter Integer varConductionLayerNum=0 "Index of variable heat conduction layer";
 
 
