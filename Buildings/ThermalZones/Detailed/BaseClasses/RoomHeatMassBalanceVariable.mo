@@ -6,6 +6,10 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
     Modelica.Media.Interfaces.PartialMedium "Medium in the component"
       annotation (choicesAllMatching = true);
 
+  replaceable package Medium_FluidContainer =
+    Modelica.Media.Interfaces.PartialMedium "Medium in the fluid containers"
+      annotation (choicesAllMatching = true);
+
   parameter Integer nPorts=0 "Number of ports" annotation (Evaluate=true,
       Dialog(
       connectorSizing=true,
@@ -46,7 +50,8 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
     final varConductionLayerNum = datConExt.varConductionLayerNum,
     final hasFluidContainer = datConExt.hasFluidContainer,
     final A_FluidContainer = datConExt.A_FluidContainer,
-    final x_FluidContainer = datConExt.x_FluidContainer) if haveConExt
+    final x_FluidContainer = datConExt.x_FluidContainer,
+    redeclare each package Medium_FluidContainer = Medium_FluidContainer) if haveConExt
     "Heat conduction through exterior construction that have no window"
     annotation (Placement(transformation(extent={{288,100},{242,146}})));
   Constructions.ConstructionWithWindow conExtWin[NConExtWin](
@@ -286,12 +291,34 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
        haveShade "Radiation model for room-side window shade"
     annotation (Placement(transformation(extent={{-60,90},{-40,110}})));
 
+
+  ////////////////////////////////////////////////////////////////////////
+  // Variable Elements
+  Modelica.Blocks.Interfaces.RealVectorInput uFactors[NConExt]
+    "Wall construction conduction factor input"
+    annotation (Placement(
+        transformation(extent={{-240,-52},{-200,-12}}),
+                                                      iconTransformation(extent={{-240,
+            -52},{-200,-12}})));
+
+
+  Modelica.Fluid.Vessels.BaseClasses.VesselFluidPorts_b fluidPorts[nConExt](
+    redeclare each package Medium = Medium_FluidContainer) if
+       haveWallFluidContainers "Fluid inlets and outlets"
+    annotation (Placement(transformation(
+        extent={{-40,-10},{40,10}},
+        origin={114,144},
+        rotation=90), iconTransformation(
+        extent={{-40,-10},{40,10}},
+        rotation=0,
+        origin={-120,170})));
+
 protected
   final parameter Modelica.SIunits.TransmissionCoefficient tauIRSha_air[NConExtWin]=
     datConExtWin.glaSys.shade.tauIR_a
     "Infrared transmissivity of shade for radiation coming from the exterior or the room"
     annotation (Dialog(group="Shading"));
-        final parameter Modelica.SIunits.TransmissionCoefficient tauIRSha_glass[NConExtWin]=
+  final parameter Modelica.SIunits.TransmissionCoefficient tauIRSha_glass[NConExtWin]=
     datConExtWin.glaSys.shade.tauIR_b
     "Infrared transmissivity of shade for radiation coming from the glass"
     annotation (Dialog(group="Shading"));
@@ -368,21 +395,13 @@ protected
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature TSha[NConExtWin] if
        haveShade "Temperature of shading device"
     annotation (Placement(transformation(extent={{-20,-78},{-40,-58}})));
-public
-  Modelica.Blocks.Interfaces.RealVectorInput uFactors[NConExt]
-    "Wall construction conduction factor input"
-    annotation (Placement(
-        transformation(extent={{-240,-52},{-200,-12}}),
-                                                      iconTransformation(extent={{-240,
-            -52},{-200,-12}})));
-  Modelica.Fluid.Vessels.BaseClasses.VesselFluidPorts_b fluidPorts[NConExt] "Fluid inlets and outlets"
-    annotation (Placement(transformation(
-        extent={{-40,-10},{40,10}},
-        origin={114,144},
-        rotation=90), iconTransformation(
-        extent={{-40,-10},{40,10}},
-        rotation=90,
-        origin={-150,-202})));
+
+  // Flags for variable elements
+  final parameter Boolean haveWallFluidContainers=
+    Modelica.Math.BooleanVectors.anyTrue(datConExt.hasFluidContainer)
+    "Flag to indicate if any construction has an integrated fluid container";
+  final parameter Boolean haveFluidContainerConExt[NConExt]=
+    datConExt.hasFluidContainer "Flag to indicate construction has fluid container";
 equation
   connect(conBou.opa_a, surf_conBou) annotation (Line(
       points={{282,-122.667},{282,-122},{288,-122},{288,-216},{-240,-216},{-240,
@@ -791,10 +810,17 @@ equation
       Line(points={{299,-23},{18,-23},{18,51.6667},{-79.5833,51.6667}}, color={
           0,0,127}));
 
+  // Variable elements connections
   for i in 1:nConExt loop
     connect(conExt[i].uFactor, uFactors[i]) annotation (Line(points={{288.613,
             142.473},{306.77,142.473},{306.77,-32},{-220,-32}},
                                                    color={0,0,127}));
+    if haveFluidContainerConExt[i] then
+      connect(fluidPorts[i], conExt[i].port_a) annotation (Line(points={{114,144},
+              {204,144},{204,102},{288.153,102},{288.153,123.767}},
+                                                      color={0,127,255}));
+    end if;
+
   end for;
   annotation (
     Diagram(coordinateSystem(preserveAspectRatio=false,extent={{-260,-220},{460,

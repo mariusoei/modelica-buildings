@@ -2,6 +2,7 @@ within Buildings.ThermalZones.Detailed.Constructions.BaseClasses;
 partial model PartialConstructionVariable
   "Partial model for exterior construction that has no window"
 
+
   parameter Modelica.SIunits.Area A "Heat transfer area";
   parameter Modelica.SIunits.Area AOpa
     "Heat transfer area of opaque construction"
@@ -17,6 +18,10 @@ partial model PartialConstructionVariable
   parameter Boolean hasFluidContainer=false
     "=true if this construction contains a fluid container"
     annotation (evaluate=true);
+
+
+  replaceable package Medium_FluidContainer =
+      Modelica.Media.Interfaces.PartialMedium                                         "Medium in the fluid container";
 
   parameter Modelica.SIunits.Length x_FluidContainer=0
     "Thickness of the fluid container in this construction";
@@ -92,9 +97,13 @@ partial model PartialConstructionVariable
     height=x_FluidContainer,
     crossArea=A_FluidContainer,
     level_start=0,
-    use_HeatTransfer=true) if hasFluidContainer "Fluid container"
+    use_HeatTransfer=true,
+    redeclare package Medium = Medium_FluidContainer,
+    use_portsData=false,
+    T_start=293.15) if hasFluidContainer "Fluid container"
     annotation (Placement(transformation(extent={{26,72},{66,112}})));
-  Modelica.Fluid.Interfaces.FluidPort_a port_a if hasFluidContainer
+  Modelica.Fluid.Interfaces.FluidPort_a port_a(redeclare package Medium =
+        Medium_FluidContainer) if hasFluidContainer
     "Fluid port for the container"
     annotation (Placement(transformation(extent={{-312,0},{-292,20}})));
 equation
