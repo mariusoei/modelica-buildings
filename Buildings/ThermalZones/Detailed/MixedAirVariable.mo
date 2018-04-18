@@ -93,6 +93,10 @@ model MixedAirVariable "Model of a room in which the air is completely mixed"
     annotation (Placement(transformation(extent={{-300,-130},{-260,-90}}),
         iconTransformation(extent={{-232,12},{-200,44}})));
 
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heaPorConExtSurInt[nConExt]
+    "Heat port to inside facing surfaces of external constructions "
+    annotation (Placement(transformation(extent={{270,190},{290,210}}),
+        iconTransformation(extent={{-62,128},{-42,148}})));
 equation
   connect(uSha, conExtWin.uSha) annotation (Line(
       points={{-280,180},{308,180},{308,62},{281,62}},
@@ -126,6 +130,8 @@ equation
   connect(C_flow, air.C_flow) annotation (Line(points={{-280,-110},{-200,-110},{
           -200,-114},{-200,-114},{-200,-202},{-18,-202},{-18,-141},{39,-141}},
         color={0,0,127}));
+  connect(heaPorConExtSurInt, conExt.opa_b) annotation (Line(points={{280,200},
+          {242,200},{242,144},{241.847,144},{241.847,138.333}}, color={191,0,0}));
   annotation (
     Documentation(info="<html>
 <p>
@@ -243,5 +249,11 @@ First implementation.
           extent={{-190,44},{-128,14}},
           lineColor={0,0,127},
           textString="C_flow",
-          visible=use_C_flow)}));
+          visible=use_C_flow),
+        Text(
+          extent={{-34,146},{38,120}},
+          lineColor={0,0,0},
+          fillColor={61,61,61},
+          fillPattern=FillPattern.Solid,
+          textString="conExtSurface")}));
 end MixedAirVariable;
