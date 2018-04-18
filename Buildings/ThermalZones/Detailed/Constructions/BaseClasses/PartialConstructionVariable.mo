@@ -21,7 +21,8 @@ partial model PartialConstructionVariable
 
 
   replaceable package Medium_FluidContainer =
-      Modelica.Media.Interfaces.PartialMedium                                         "Medium in the fluid container";
+      Modelica.Media.Interfaces.PartialMedium
+      "Medium in the fluid container";
 
   parameter Modelica.SIunits.Length x_FluidContainer=0
     "Thickness of the fluid container in this construction";
@@ -122,8 +123,8 @@ equation
   if hasFluidContainer then
     connect(port_a,tank. ports[1]) annotation (Line(points={{-302,10},{46,10},{46,
           72}},         color={0,127,255}));
-    connect(tank.heatPort, opa.port_inside) annotation (Line(points={{26,92},{-86,92},
-          {-86,171.92},{-52,171.92}}, color={191,0,0}));
+    connect(tank.heatPort, opa.port_inside) annotation (Line(points={{26,92},{0,
+            92},{0,153.2}},           color={191,0,0}));
   end if;
   annotation (Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},
             {300,300}})), Icon(coordinateSystem(preserveAspectRatio=true,
