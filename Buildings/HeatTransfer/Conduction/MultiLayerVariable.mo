@@ -32,8 +32,8 @@ model MultiLayerVariable
     annotation (Placement(transformation(extent={{-126,32},{-86,72}})));
 
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a port_inside if showHeatPort
-    "Additional inside heat port" annotation (Placement(transformation(extent={{-110,
-            -64},{-90,-44}})));
+    "Additional inside heat port" annotation (Placement(transformation(extent={{-10,
+            -100},{10,-80}}), iconTransformation(extent={{-10,-100},{10,-80}})));
 
 protected
   Buildings.HeatTransfer.Conduction.SingleLayerVariable[nLay] lay(
@@ -94,7 +94,7 @@ equation
 
   if showHeatPort then
     connect(port_inside, lay[heatPortAfterLayerNum].port_b)
-      annotation (Line(points={{-100,-54},{0,-54},{0,0}},     color={191,0,0}));
+      annotation (Line(points={{0,-90},{0,-90},{0,0}},        color={191,0,0}));
   end if;
   annotation (
     Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100},{100,
