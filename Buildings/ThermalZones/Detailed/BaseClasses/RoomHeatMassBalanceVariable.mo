@@ -294,7 +294,7 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
 
   ////////////////////////////////////////////////////////////////////////
   // Variable Elements
-  Modelica.Blocks.Interfaces.RealVectorInput uFactors[NConExt]
+  Modelica.Blocks.Interfaces.RealInput uFactors[NConExt]
     "Wall construction conduction factor input"
     annotation (Placement(
         transformation(extent={{-240,-52},{-200,-12}}),
@@ -890,7 +890,7 @@ equation
         Text(
           extent={{-190,-16},{-114,-48}},
           lineColor={0,0,127},
-          textString="uFactor")}),
+          textString="kLambda")}),
     preferredView="info",
     defaultComponentName="roo",
     Documentation(info="<html>
