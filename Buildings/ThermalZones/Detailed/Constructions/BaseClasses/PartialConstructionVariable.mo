@@ -55,12 +55,17 @@ partial model PartialConstructionVariable
   // Custom parameters for variable layers
   parameter Integer varLayerIndex=0
     "Index of variable layer";
-
   parameter Boolean hasVarLayer=false
     "=true if a variable layer is present";
 
+  parameter Integer heatPortLayerIndex=0
+    "Index of layer after which heat port is exposed";
+  parameter Boolean hasExposedHeatPort=false
+    "=true if internal heat port is exposed";
+
   Modelica.Blocks.Interfaces.RealInput kLambda if hasVarLayer
-    annotation (Placement(transformation(extent={{-328,240},{-288,280}})));
+    annotation (Placement(transformation(extent={{-326,262},{-286,302}}),
+        iconTransformation(extent={{-326,262},{-286,302}})));
 
 
   HeatTransfer.Conduction.MultiLayerVariable opa(
@@ -72,10 +77,16 @@ partial model PartialConstructionVariable
     final T_a_start=T_a_start,
     final T_b_start=T_b_start,
     final hasVarLayer=hasVarLayer,
-    final varLayerIndex=varLayerIndex)
+    final varLayerIndex=varLayerIndex,
+    final heatPortLayerIndex=heatPortLayerIndex,
+    final hasExposedHeatPort=hasExposedHeatPort)
     "Model for variable heat transfer through opaque construction"
     annotation (Placement(transformation(extent={{-52,148},{52,252}})));
 
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a opa_inside if hasExposedHeatPort
+    "Heat port inside of opaque construction"
+    annotation (Placement(transformation(extent={{-310,-4},{-290,16}}),
+        iconTransformation(extent={{-310,-4},{-290,16}})));
 equation
   connect(opa.port_a, opa_a) annotation (Line(
       points={{-52,200},{-300,200}},
@@ -88,8 +99,13 @@ equation
 
   // Only connect if variable layer is present
   if hasVarLayer then
-    connect(kLambda, opa.kLambda) annotation (Line(points={{-308,260},{-186,260},{
-          -186,222.88},{-55.12,222.88}}, color={0,0,127}));
+    connect(kLambda, opa.kLambda) annotation (Line(points={{-306,282},{-186,282},
+            {-186,222.88},{-55.12,222.88}},
+                                         color={0,0,127}));
+  end if;
+  if hasExposedHeatPort then
+    connect(opa_inside, opa.port_inside) annotation (Line(points={{-300,6},{0,6},
+            {0,158.4}},                                                                        color={191,0,0}));
   end if;
   annotation (Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-300,-300},
             {300,300}})), Icon(coordinateSystem(preserveAspectRatio=true,
@@ -120,7 +136,15 @@ equation
         Text(
           extent={{-314,336},{286,302}},
           lineColor={0,0,255},
-          textString="%name")}),
+          textString="%name"),
+        Line(
+          points={{-300,282},{-10,282},{-10,212}},
+          color={28,108,200},
+          thickness=0.5),
+        Line(
+          points={{-300,6},{-10,6},{-10,178}},
+          color={191,0,0},
+          thickness=1)}),
     Documentation(info="<html>
 <p>
 This is the base class that is used to model opaque constructions in the room model.

@@ -24,8 +24,19 @@ model MultiLayerVariable
   parameter Boolean hasVarLayer=false
     "=true if a variable layer is present";
 
+  parameter Integer heatPortLayerIndex=0
+    "Index of layer after which heat port is exposed";
+
+  parameter Boolean hasExposedHeatPort=false
+    "=true if there is an exposed heat port";
+
   Modelica.Blocks.Interfaces.RealInput kLambda if hasVarLayer
     annotation (Placement(transformation(extent={{-126,24},{-86,64}})));
+
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a port_inside if hasExposedHeatPort
+    "Heat port after defined layer (heatPortLayerIndex)"
+    annotation (Placement(transformation(extent={{-10,-90},{10,-70}}),
+        iconTransformation(extent={{-10,-90},{10,-70}})));
 
 protected
   Buildings.HeatTransfer.Conduction.SingleLayerVariable[nLay] lay(
@@ -76,6 +87,11 @@ equation
     connect(kLambda, lay[varLayerIndex].kLambda) annotation (Line(points={{-106,44},{-64,44},{
           -64,5},{-20.8,5}}, color={0,0,127}));
   end if;
+  // Connect the inside heat port (if present)
+  if hasExposedHeatPort then
+    connect(port_inside, lay[heatPortLayerIndex].port_b)
+      annotation (Line(points={{0,-80},{0,0},{0,0}}, color={191,0,0}));
+  end if;
 
   annotation ( Icon(coordinateSystem(
           preserveAspectRatio=true, extent={{-100,-100},{100,100}}), graphics={
@@ -120,7 +136,8 @@ equation
    visible=stateAtSurface_a),
    Line(points={{-72,-40},{-86,-40}},     color = {0, 0, 0}, thickness = 0.5,
    smooth = Smooth.None,
-   visible=stateAtSurface_a)}),
+   visible=stateAtSurface_a),        Line(points={{0,-6},{0,-80}},
+   color = {0, 0, 0}, thickness = 0.5, smooth = Smooth.None)}),
     defaultComponentName="heaCon",
     Documentation(info="<html>
 <p>

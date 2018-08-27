@@ -43,10 +43,12 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
     final T_b_start=datConExt.T_b_start,
     final varLayerIndex=datConExt.varLayerIndex,
     final hasVarLayer=datConExt.hasVarLayer,
+    final heatPortLayerIndex=datConExt.heatPortLayerIndex,
+    final hasExposedHeatPort=datConExt.hasExposedHeatPort,
     final stateAtSurface_a = datConExt.stateAtSurface_a,
     final stateAtSurface_b = datConExt.stateAtSurface_b) if haveConExt
     "Heat conduction through exterior construction that have no window"
-    annotation (Placement(transformation(extent={{288,100},{242,146}})));
+    annotation (Placement(transformation(extent={{282,98},{236,144}})));
   Constructions.ConstructionWithWindow conExtWin[NConExtWin](
     final A=datConExtWin.A,
     final til=datConExtWin.til,
@@ -367,8 +369,9 @@ protected
        haveShade "Temperature of shading device"
     annotation (Placement(transformation(extent={{-20,-78},{-40,-58}})));
 
-
+  ////////////////////////////////////////////////////////////////////////
   // Additional objects for variable version
+
   // If at least one glass layer in the room has mutiple states, then
   // set haveControllableWindow=true. In this case, the input connector for
   // the control signal will be enabled. Otherwise, it is removed.
@@ -376,6 +379,11 @@ protected
   final parameter Boolean haveVariableConductionConstruction=
   Modelica.Math.BooleanVectors.anyTrue(
     {datConExt[i].hasVarLayer for i in 1:NConExt})
+    "Flag, true if any of the constructions has a variable conduction layer"
+    annotation(Evaluate=true);
+  final parameter Boolean haveExposedHeatPortInConstruction=
+  Modelica.Math.BooleanVectors.anyTrue(
+    {datConExt[i].hasExposedHeatPort for i in 1:NConExt})
     "Flag, true if any of the constructions has a variable conduction layer"
     annotation(Evaluate=true);
 public
@@ -386,10 +394,14 @@ public
     annotation (Placement(transformation(
         extent={{-20,-20},{20,20}},
         origin={296,208},
-        rotation=270), iconTransformation(extent={{-16,-16},{16,16}}, origin={62,168},
-
+        rotation=270), iconTransformation(extent={{-16,-16},{16,16}}, origin={-4,168},
         rotation=270)));
 
+  Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heaPorConInside[NConExt] if
+       haveExposedHeatPortInConstruction
+    "Heat port to inside of construction" annotation (Placement(transformation(
+          extent={{328,190},{348,210}}), iconTransformation(extent={{104,140},{
+            124,160}})));
 
 equation
   connect(conBou.opa_a, surf_conBou) annotation (Line(
@@ -430,7 +442,7 @@ equation
       color={191,0,0},
       smooth=Smooth.None));
   connect(conExt.opa_a, bouConExt.opa_a) annotation (Line(
-      points={{288,138.333},{334,138.333},{334,139},{352,139}},
+      points={{282,136.333},{334,136.333},{334,139},{352,139}},
       color={191,0,0},
       smooth=Smooth.None));
   connect(weaBus, bouConExtWin.weaBus) annotation (Line(
@@ -472,7 +484,7 @@ equation
       smooth=Smooth.None));
  // Connect statements from the model BaseClasses.MixedAir
   connect(conExt.opa_b, irRadExc.conExt) annotation (Line(
-      points={{241.847,138.333},{160,138.333},{160,60},{-60,60},{-60,20},{-80,
+      points={{235.847,136.333},{160,136.333},{160,60},{-60,60},{-60,20},{-80,
           20},{-80,19.1667}},
       color={190,0,0},
       smooth=Smooth.None));
@@ -503,8 +515,8 @@ equation
       color={191,0,0},
       smooth=Smooth.None));
   connect(irRadGai.conExt, conExt.opa_b) annotation (Line(
-      points={{-80,-20.8333},{-80,-20},{-60,-20},{-60,60},{160,60},{160,138.333},
-          {241.847,138.333}},
+      points={{-80,-20.8333},{-80,-20},{-60,-20},{-60,60},{160,60},{160,136.333},
+          {235.847,136.333}},
       color={191,0,0},
       smooth=Smooth.None));
   connect(irRadGai.conExtWinFra, conExtWin.fra_b) annotation (Line(
@@ -543,7 +555,7 @@ equation
       smooth=Smooth.None));
 
   connect(conExt.opa_b, solRadExc.conExt) annotation (Line(
-      points={{241.847,138.333},{160,138.333},{160,60},{-80,60},{-80,59.1667}},
+      points={{235.847,136.333},{160,136.333},{160,60},{-80,60},{-80,59.1667}},
       color={190,0,0},
       smooth=Smooth.None));
   connect(conExtWin.fra_b, solRadExc.conExtWinFra) annotation (Line(
@@ -584,7 +596,7 @@ equation
       color={0,0,127},
       smooth=Smooth.None));
   connect(conExt.opa_b, radTem.conExt) annotation (Line(
-      points={{241.847,138.333},{160,138.333},{160,60},{-60,60},{-60,-60.8333},
+      points={{235.847,136.333},{160,136.333},{160,60},{-60,60},{-60,-60.8333},
           {-80,-60.8333}},
       color={191,0,0},
       smooth=Smooth.None));
@@ -721,7 +733,7 @@ equation
   end for;
 
   connect(air.conExt, conExt.opa_b) annotation (Line(
-      points={{64,-119},{160,-119},{160,138.333},{241.847,138.333}},
+      points={{64,-119},{160,-119},{160,136.333},{235.847,136.333}},
       color={191,0,0},
       smooth=Smooth.None));
   connect(air.conExtWin, conExtWin.opa_b) annotation (Line(
@@ -803,8 +815,12 @@ equation
   for ii in 1:NConExt loop
     if datConExt[ii].hasVarLayer then
       connect(kLambda[ii], conExt[ii].kLambda) annotation (Line(points={{296,208},
-              {294,208},{294,142.933},{288.613,142.933}},
+              {294,208},{294,142.62},{282.46,142.62}},
                                             color={0,0,127}));
+    end if;
+    if datConExt[ii].hasExposedHeatPort then
+      connect(conExt[ii].opa_inside, heaPorConInside[ii]) annotation (Line(points={{282,121.46},
+          {338,121.46},{338,200}}, color={191,0,0}));
     end if;
   end for;
 
@@ -874,10 +890,16 @@ equation
           visible=haveControllableWindow,
           textString="uWin"),
         Text(
-          extent={{24,138},{116,104}},
+          extent={{-50,138},{42,104}},
           lineColor={0,0,127},
           textString="kLambda",
-          horizontalAlignment=TextAlignment.Right)}),
+          horizontalAlignment=TextAlignment.Right),
+        Text(
+          extent={{92,134},{130,112}},
+          lineColor={0,0,0},
+          fillColor={61,61,61},
+          fillPattern=FillPattern.Solid,
+          textString="inside")}),
     preferredView="info",
     defaultComponentName="roo",
     Documentation(info="<html>
