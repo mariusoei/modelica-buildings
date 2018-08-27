@@ -386,8 +386,9 @@ public
     annotation (Placement(transformation(
         extent={{-20,-20},{20,20}},
         origin={296,208},
-        rotation=270), iconTransformation(extent={{-16,-16},{16,16}}, origin={-216,
-            130})));
+        rotation=270), iconTransformation(extent={{-16,-16},{16,16}}, origin={62,168},
+
+        rotation=270)));
 
 
 equation
@@ -871,7 +872,12 @@ equation
           extent={{-198,144},{-122,112}},
           lineColor={0,0,127},
           visible=haveControllableWindow,
-          textString="uWin")}),
+          textString="uWin"),
+        Text(
+          extent={{24,138},{116,104}},
+          lineColor={0,0,127},
+          textString="kLambda",
+          horizontalAlignment=TextAlignment.Right)}),
     preferredView="info",
     defaultComponentName="roo",
     Documentation(info="<html>
