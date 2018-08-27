@@ -29,6 +29,7 @@ ConstructionRecordsVariable
 OpaqueSurface
 Overhang
 ParameterConstruction
+ParameterConstructionVariable
 ParameterConstructionWithWindow
 PartialParameterConstruction
 SideFins
