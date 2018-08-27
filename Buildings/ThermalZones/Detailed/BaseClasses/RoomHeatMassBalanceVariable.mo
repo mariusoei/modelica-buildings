@@ -366,6 +366,30 @@ protected
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature TSha[NConExtWin] if
        haveShade "Temperature of shading device"
     annotation (Placement(transformation(extent={{-20,-78},{-40,-58}})));
+
+
+  // Additional objects for variable version
+  // If at least one glass layer in the room has mutiple states, then
+  // set haveControllableWindow=true. In this case, the input connector for
+  // the control signal will be enabled. Otherwise, it is removed.
+protected
+  final parameter Boolean haveVariableConductionConstruction=
+  Modelica.Math.BooleanVectors.anyTrue(
+    {datConExt[i].hasVarLayer for i in 1:NConExt})
+    "Flag, true if any of the constructions has a variable conduction layer"
+    annotation(Evaluate=true);
+public
+  Modelica.Blocks.Interfaces.RealInput kLambda[NConExt](
+    each min=0,
+    each unit="1") if haveVariableConductionConstruction
+    "Heat conduction modifier for variable conduction layer in construction"
+    annotation (Placement(transformation(
+        extent={{-20,-20},{20,20}},
+        origin={296,208},
+        rotation=270), iconTransformation(extent={{-16,-16},{16,16}}, origin={-216,
+            130})));
+
+
 equation
   connect(conBou.opa_a, surf_conBou) annotation (Line(
       points={{282,-122.667},{282,-122},{288,-122},{288,-216},{-240,-216},{-240,
@@ -773,6 +797,16 @@ equation
   connect(conExtWinRad.QTraDir_flow, solRadExc.JInDirConExtWin) annotation (
       Line(points={{299,-23},{18,-23},{18,51.6667},{-79.5833,51.6667}}, color={
           0,0,127}));
+
+  // Connectors for variable layers
+  for ii in 1:NConExt loop
+    if datConExt[ii].hasVarLayer then
+      connect(kLambda[ii], conExt[ii].kLambda) annotation (Line(points={{296,208},
+              {294,208},{294,142.933},{288.613,142.933}},
+                                            color={0,0,127}));
+    end if;
+  end for;
+
   annotation (
     Diagram(coordinateSystem(preserveAspectRatio=false,extent={{-260,-220},{460,
             200}})),
