@@ -1,6 +1,6 @@
 within Buildings.ThermalZones.Detailed.BaseClasses;
 partial model RoomHeatMassBalanceVariable "Base model for a room"
-  extends Buildings.ThermalZones.Detailed.BaseClasses.ConstructionRecords;
+  extends Buildings.ThermalZones.Detailed.BaseClasses.ConstructionRecordsVariable;
 
   replaceable package Medium =
     Modelica.Media.Interfaces.PartialMedium "Medium in the component"
@@ -34,13 +34,15 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
                 iconTransformation(extent={{-20,-48},{0,-28}})));
   ////////////////////////////////////////////////////////////////////////
   // Constructions
-  Constructions.Construction conExt[NConExt](
+  Constructions.ConstructionVariable conExt[NConExt](
     final A=datConExt.A,
     final til=datConExt.til,
     final layers=datConExt.layers,
     final steadyStateInitial=datConExt.steadyStateInitial,
     final T_a_start=datConExt.T_a_start,
     final T_b_start=datConExt.T_b_start,
+    final varLayerIndex=datConExt.varLayerIndex,
+    final hasVarLayer=datConExt.hasVarLayer,
     final stateAtSurface_a = datConExt.stateAtSurface_a,
     final stateAtSurface_b = datConExt.stateAtSurface_b) if haveConExt
     "Heat conduction through exterior construction that have no window"

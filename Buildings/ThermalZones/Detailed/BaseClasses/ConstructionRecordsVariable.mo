@@ -3,7 +3,7 @@ record ConstructionRecordsVariable
   "Data records for variable construction data"
   extends Buildings.ThermalZones.Detailed.BaseClasses.ConstructionNumbers;
 
-  parameter ParameterConstruction datConExt[NConExt](
+  parameter ParameterConstructionVariable datConExt[NConExt](
     each A=0,
     each layers = dummyCon,
     each til=0,
