@@ -19,7 +19,10 @@ model SingleLayerVariable
    each nominal=300)
     "Temperature at the states";
 
-  Modelica.Blocks.Interfaces.RealInput kLambda=1
+
+  parameter Boolean isVarLayer=false;
+
+  Modelica.Blocks.Interfaces.RealInput kLambda_in(start=1) if isVarLayer
     annotation (Placement(transformation(extent={{-128,30},{-88,70}})));
 
   Modelica.SIunits.HeatFlowRate Q_flow[nSta+1]
@@ -111,6 +114,8 @@ protected
     each unit="kg.K2/J")
     "Derivatives dT/du at the support points (used for PCM)";
 
+  Modelica.Blocks.Interfaces.RealInput kLambda "Value of kLambda, set to 1 if not variable";
+
 initial equation
   assert(abs(sum(RNod) - R) < 1E-10, "Error in computing resistances.");
   assert(abs(sum(m) - A*material.x*material.d) < 1E-10, "Error in computing mass.");
@@ -127,11 +132,13 @@ initial equation
         if stateAtSurface_a then
           T[1] = T_a_start;
           for i in 2:nSta loop
-            T[i] =T_a_start + (T_b_start - T_a_start)*UA*sum(RNod[k] for k in 1:i-1)/kLambda;
+            T[i] =T_a_start + (T_b_start - T_a_start)*UA*sum(RNod[k] for k in 1:
+            i - 1);
           end for;
         else // stateAtSurface_a == false
           for i in 1:nSta loop
-            T[i] = T_a_start + (T_b_start - T_a_start)*UA*sum(RNod[k] for k in 1:i)/kLambda;
+            T[i] =T_a_start + (T_b_start - T_a_start)*UA*sum(RNod[k] for k in 1:
+            i);
           end for;
         end if;
       end if;
@@ -150,16 +157,26 @@ initial equation
      dT_du = zeros(Buildings.HeatTransfer.Conduction.nSupPCM);
    end if;
 equation
+
+    //Define kLambda depending on whether this component is variable
+    if isVarLayer then
+      connect(kLambda_in,kLambda);
+    else
+      kLambda = 1;
+    end if;
+
     port_a.Q_flow = +Q_flow[1];
     port_b.Q_flow = -Q_flow[end];
 
-    port_a.T-T[1]    = if stateAtSurface_a then 0 else Q_flow[1]*RNod[1]/kLambda;
-    T[nSta]-port_b.T = if stateAtSurface_b then 0 else Q_flow[end]*RNod[end]/kLambda;
+    port_a.T-T[1]    =if stateAtSurface_a then 0 else Q_flow[1]*RNod[1]/
+    kLambda;
+    T[nSta]-port_b.T =if stateAtSurface_b then 0 else Q_flow[end]*RNod[end]/
+    kLambda;
 
     for i in 1:nSta-1 loop
        // Q_flow[i+1] is heat flowing from (i) to (i+1)
        // because T[1] has Q_flow[1] and Q_flow[2] acting on it.
-       T[i]-T[i+1] = Q_flow[i+1]*RNod[i+1]/kLambda;
+       T[i]-T[i+1] =Q_flow[i + 1]*RNod[i + 1]/kLambda;
     end for;
 
     // Steady-state heat balance

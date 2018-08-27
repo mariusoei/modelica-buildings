@@ -49,8 +49,10 @@ protected
     sum(layers.material[k].R for k in i:size(layers.material, 1)) for i in 1:size(layers.material, 1)},
    T_b_start = { T_a_start+(T_b_start-T_a_start) * 1/R *
     sum(layers.material[k].R for k in 1:i) for i in 1:size(layers.material, 1)},
-   each steadyStateInitial = steadyStateInitial) "Material layer"
+   each steadyStateInitial = steadyStateInitial,
+   final isVarLayer = {if i == varLayerIndex then true else false for i in 1:nLay}) "Material layer"
     annotation (Placement(transformation(extent={{-20,-10},{0,10}})));
+
 
 equation
   // This section assigns the temperatures and heat flow rates of the layer models to
@@ -84,8 +86,8 @@ equation
 
   // Connect the conductivity factor input to the variable layer (if present)
   if hasVarLayer then
-    connect(kLambda, lay[varLayerIndex].kLambda) annotation (Line(points={{-106,44},{-64,44},{
-          -64,5},{-20.8,5}}, color={0,0,127}));
+    connect(kLambda, lay[varLayerIndex].kLambda_in) annotation (Line(points={{-106,
+            44},{-64,44},{-64,5},{-20.8,5}}, color={0,0,127}));
   end if;
   // Connect the inside heat port (if present)
   if hasExposedHeatPort then

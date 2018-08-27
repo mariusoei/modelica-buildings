@@ -2,7 +2,7 @@ within Buildings.ThermalZones.Detailed.BaseClasses;
 record ConstructionRecords "Data records for construction data"
   extends Buildings.ThermalZones.Detailed.BaseClasses.ConstructionNumbers;
 
-  parameter ParameterConstruction datConExt[NConExt](
+  parameter ParameterConstructionVariable datConExt[NConExt](
     each A=0,
     each layers = dummyCon,
     each til=0,

@@ -1,6 +1,6 @@
 within Buildings.ThermalZones.Detailed.BaseClasses;
 partial model RoomHeatMassBalanceVariable "Base model for a room"
-  extends Buildings.ThermalZones.Detailed.BaseClasses.ConstructionRecordsVariable;
+  extends Buildings.ThermalZones.Detailed.BaseClasses.ConstructionRecords;
 
   replaceable package Medium =
     Modelica.Media.Interfaces.PartialMedium "Medium in the component"
@@ -151,8 +151,9 @@ partial model RoomHeatMassBalanceVariable "Base model for a room"
     final lat=lat,
     linearizeRadiation=linearizeRadiation,
     final conMod=extConMod,
-    final conPar=datConExt,
-    final hFixed=hExtFixed) if haveConExt
+    redeclare final ParameterConstructionVariable conPar=datConExt,
+    final hFixed=hExtFixed) if
+         haveConExt
     "Exterior boundary conditions for constructions without a window"
     annotation (Placement(transformation(extent={{352,114},{382,144}})));
   // Reassign the tilt since a construction that is declared as a ceiling of the
